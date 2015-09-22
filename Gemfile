@@ -10,4 +10,6 @@ group :development, :test do
   gem 'rspec-sinatra'
   gem 'selenium-webdriver'
   gem 'shotgun'
+  gem 'data_mapper'
+  gem 'dm-postgres-adapter'
 end
