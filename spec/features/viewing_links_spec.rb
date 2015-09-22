@@ -6,7 +6,7 @@ feature 'Viewing links' do
     visit '/links'
     # as this is the first feauture test, the following expectation is a quick
     # check that everything is working
-    expect(page.status_code).to eq 200
+    expect(page.status_code).to eql(200)
     # might remove this later
     within 'ul#links' do
       expect(page).to have_content('Makers Academy')
