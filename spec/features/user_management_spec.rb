@@ -13,7 +13,7 @@ feature 'User sign up' do
     expect(page).to have_content('Welcome, alice@example.com')
     expect(User.first.email).to eq('alice@example.com')
   end
-
+gi
   scenario 'requires a matching confirmation password' do
     # again it's questionable whether we should be testing the model at this
     # level.  We are mixing integration tests with feature tests.
