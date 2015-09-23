@@ -1,10 +1,16 @@
 require 'sinatra/base'
+require_relative 'helpers'
 require_relative './data_mapper_setup.rb'
 
 
-class Controller < Sinatra::Base
 
-set :views, proc { File.join(root, 'views') }
+class Controller < Sinatra::Base
+  include Helpers
+
+  set :views, proc { File.join(root, 'views') }
+
+  enable :sessions
+  set :sesion_secret, 'super secret'
 
   get '/' do
     redirect to('/links')
@@ -33,5 +39,17 @@ set :views, proc { File.join(root, 'views') }
     tag = Tag.first(name: params[:name])
     @links = tag ? tag.links : []
     erb :'links/index'
+  end
+
+  get '/users/new' do
+    erb :'users/new'
+  end
+
+  post '/users' do
+    user = User.create(email: params[:email],
+              password: params[:password],
+              password_confirmation: params[:password_confirmation])
+    session[:user_id] = user.id
+    redirect to('/links')
   end
 end
