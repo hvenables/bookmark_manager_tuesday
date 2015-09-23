@@ -6,6 +6,10 @@ class Controller < Sinatra::Base
 
 set :views, proc { File.join(root, 'views') }
 
+  get '/' do
+    redirect to('/links')
+  end
+
   get '/links' do
     @links = Link.all
     erb :'links/index'
