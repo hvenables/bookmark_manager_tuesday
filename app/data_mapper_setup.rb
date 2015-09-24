@@ -1,5 +1,8 @@
 require 'data_mapper'
 require 'dm-validations'
+require 'sinatra/flash'
+require 'sinatra/base'
+require_relative 'helpers'
 require './app/models/link' # require each model individually - the path may vary depending on your file structure.
 require './app/models/tag'
 require './app/models/user'
