@@ -22,10 +22,7 @@ class Controller < Sinatra::Base
   post '/links' do
     link = Link.new(url: params[:url],
                   title: params[:title])
-    params[:tag].split(" ").each do |tag|
-      link.tags << Tag.create(name: tag)
-      end
-    link.save
+    assign_tags(link, params[:tags])
     redirect to('/links')
   end
 
@@ -46,13 +43,13 @@ class Controller < Sinatra::Base
 
   post '/users' do
     @user = User.create(email: params[:email],
-                       password: params[:password],
-                       password_confirmation: params[:password_confirmation])
+                        password: params[:password],
+                        password_confirmation: params[:password_confirmation])
     if @user.save
       session[:user_id] = @user.id
       redirect to('/links')
     else
-      flash.now[:notice] = "Password and confirmation password do not match"
+      flash.now[:errors] = @user.errors
       erb :'users/new'
     end
   end

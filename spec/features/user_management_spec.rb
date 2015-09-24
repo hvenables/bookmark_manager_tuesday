@@ -8,32 +8,40 @@ feature 'User sign up' do
   # However, we are currently driving everything through
   # feature tests and we want to keep this example simple.
 
+  before(:each) do
+    @user = FactoryGirl.build(:user)
+  end
+
   scenario 'I can sign up as a new user' do
-    user = FactoryGirl.create(:user)
-    expect { sign_up(user) }.to change(User, :count).by(1)
+    require 'pry'; binding.pry
+    expect { sign_up(@user) }.to change(User, :count).by(1)
     expect(page).to have_content('Welcome, foo@bar.com')
     expect(User.first.email).to eq('foo@bar.com')
   end
 
   scenario 'requires a matching confirmation password' do
-    # again it's questionable whether we should be testing the model at this
-    # level.  We are mixing integration tests with feature tests.
-    # However, it's convenient for our purposes.
-    user = FactoryGirl.create(:baduser)
+    user = FactoryGirl.build(:baduser)
     expect { sign_up(user) }.not_to change(User, :count)
   end
 
   scenario 'with a password that does not match' do
-    user = FactoryGirl.create(:baduser)
+    user = FactoryGirl.build(:baduser)
     expect { sign_up(user) }.not_to change(User, :count)
-    expect(current_path).to eq('/users') # current_path is a helper provided by Capybara
-    expect(page).to have_content 'Password and confirmation password do not match'
+    expect(current_path).to eq('/users')
+    expect(page).to have_content 'Password does not match the confirmation'
   end
 
   scenario 'cannot sign up without a email address' do
-    user = FactoryGirl.create(:emptyuser)
+    user = FactoryGirl.build(:emptyuser)
     expect { sign_up(user) }.not_to change(User, :count)
-    expect(current_path).to eq('/users') # current_path is a helper provided by Capybara
+    expect(current_path).to eq('/users')
+  end
+
+  scenario 'I cannot sign up with an existing email' do
+    # require 'pry'; binding.pry
+    sign_up(@user)
+    expect { sign_up(@user) }.to change(User, :count).by(0)
+    expect(page).to have_content('Email is already taken')
   end
 
   def sign_up(user)
