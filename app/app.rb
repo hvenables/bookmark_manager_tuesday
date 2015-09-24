@@ -2,10 +2,12 @@ require_relative './data_mapper_setup.rb'
 
 
 class Controller < Sinatra::Base
+
   include Helpers
 
   set :views, proc { File.join(root, 'views') }
 
+  use Rack::MethodOverride
   enable :sessions
   register Sinatra::Flash
   set :sesion_secret, 'super secret'
@@ -52,5 +54,24 @@ class Controller < Sinatra::Base
       flash.now[:errors] = @user.errors
       erb :'users/new'
     end
+  end
+
+  get '/sessions/new' do
+    erb :'sessions/new'
+  end
+
+  post '/sessions' do
+    user = User.authenticate(params[:email], params[:password])
+    if user
+      session[:user_id] = user.id
+      redirect to('/links')
+    else
+      flash.now[:errors] = ['The email or password is incorrect']
+      erb :'sessions/new'
+    end
+  end
+
+  delete '/sessions' do
+    flash.now[:notice] = ["goodbye!"]
   end
 end

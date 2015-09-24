@@ -2,7 +2,7 @@
 
 ENV['RACK_ENV'] = 'test'
 require File.join(File.dirname(__FILE__), '..', 'app/app.rb')
-
+require_relative 'helpers/session'
 require 'capybara'
 require 'capybara/rspec'
 require 'rspec'
@@ -32,6 +32,8 @@ Capybara.app = Controller
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.include Capybara::DSL
+
+  config.include SessionHelpers
 
   config.include FactoryGirl::Syntax::Methods
   # rspec-expectations config goes here. You can use an alternate
