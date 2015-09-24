@@ -26,7 +26,7 @@ class Controller < Sinatra::Base
                   title: params[:title])
     params[:tag].split(" ").each do |tag|
       link.tags << Tag.create(name: tag)
-    end
+      end
     link.save
     redirect to('/links')
   end
@@ -47,8 +47,8 @@ class Controller < Sinatra::Base
 
   post '/users' do
     user = User.create(email: params[:email],
-              password: params[:password],
-              password_confirmation: params[:password_confirmation])
+                       password: params[:password],
+                       password_confirmation: params[:password_confirmation])
     session[:user_id] = user.id
     redirect to('/links')
   end
